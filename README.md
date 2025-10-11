@@ -34,6 +34,15 @@ The VoteBridge mod intercepts the `/voteannounce` command and:
 - **Fabric API** 0.133.14+1.21.9
 - **PB4 Placeholder API** 2.8.0+1.21.9
 
+## Input in votelistener.json
+```
+{
+  "commands": [
+    "execute as ${username} run voteannounce ${username} ${serviceName}"
+  ],
+
+```
+
 ## Example Output
 
 In Minecraft chat:
