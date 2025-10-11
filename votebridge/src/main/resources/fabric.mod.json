@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "votebridge",
+  "version": "${version}",
+  "name": "VoteBridge",
+  "description": "Bridges VoteListener placeholders to a single tellraw message visible in-game and on Discord.",
+  "authors": ["you"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.example.votebridge.VoteBridgeMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": ">=1.21.9",
+    "java": ">=21",
+    "fabric-api": "*",
+    "placeholder-api": "*"
+  }
+}
