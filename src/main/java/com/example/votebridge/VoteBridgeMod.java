@@ -35,12 +35,12 @@ public class VoteBridgeMod implements ModInitializer {
                 Text parsed = Placeholders.parseText(Text.literal("%votelistener:vote_count%"), PlaceholderContext.of(player));
                 String count = parsed.getString();
 
-                // Use display name text -> string (works across mappings)
+                // Display name -> string
                 String playerName = player.getName().getString();
 
-                // Add leading slash for proper command execution
+                // Build tellraw with NORMAL JSON quotes (no extra backslashes)
                 String tellraw = String.format(
-                    "/tellraw @a [{\\\"text\\\":\\\"%s\\\",\\\"color\\\":\\\"blue\\\"},{\\\"text\\\":\\\" voted on \\\",\\\"color\\\":\\\"aqua\\\"},{\\\"text\\\":\\\"%s\\\",\\\"color\\\":\\\"blue\\\"},{\\\"text\\\":\\\" (\\\",\\\"color\\\":\\\"aqua\\\"},{\\\"text\\\":\\\"%s\\\",\\\"color\\\":\\\"yellow\\\"},{\\\"text\\\":\\\" total votes)\\\",\\\"color\\\":\\\"aqua\\\"}]",
+                    "/tellraw @a [{\"text\":\"%s\",\"color\":\"blue\"},{\"text\":\" voted on \",\"color\":\"aqua\"},{\"text\":\"%s\",\"color\":\"blue\"},{\"text\":\" (\",\"color\":\"aqua\"},{\"text\":\"%s\",\"color\":\"yellow\"},{\"text\":\" total votes)\",\"color\":\"aqua\"}]",
                     escape(playerName), escape(service), escape(count)
                 );
 
