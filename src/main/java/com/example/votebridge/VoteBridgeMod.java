@@ -31,11 +31,13 @@ public class VoteBridgeMod implements ModInitializer {
                 ServerPlayerEntity player = EntityArgumentType.getPlayer(ctx, "player");
                 String service = StringArgumentType.getString(ctx, "service");
 
-                // Parse %votelistener:vote_count% in the player's context
+                // Resolve %votelistener:vote_count% in the player's context
                 Text parsed = Placeholders.parseText(Text.literal("%votelistener:vote_count%"), PlaceholderContext.of(player));
-                String count = parsed.getString(); // plain text value
+                String count = parsed.getString();
 
-                String playerName = player.getGameProfile().getName();
+                // Use display name text -> string (works across mappings)
+                String playerName = player.getName().getString();
+
                 String tellraw = String.format(
                     "tellraw @a [{\\\"text\\\":\\\"%s\\\",\\\"color\\\":\\\"blue\\\"},{\\\"text\\\":\\\" voted on \\\",\\\"color\\\":\\\"aqua\\\"},{\\\"text\\\":\\\"%s\\\",\\\"color\\\":\\\"blue\\\"},{\\\"text\\\":\\\" (\\\",\\\"color\\\":\\\"aqua\\\"},{\\\"text\\\":\\\"%s\\\",\\\"color\\\":\\\"yellow\\\"},{\\\"text\\\":\\\" total votes)\\\",\\\"color\\\":\\\"aqua\\\"}]",
                     escape(playerName), escape(service), escape(count)
