@@ -30,6 +30,7 @@ The VoteBridge mod intercepts the `/voteannounce` command and:
 
 - **Fabric Loader** 0.16.14+
 - **Minecraft** 1.21.9
+- **votelistener** 1.1.0+1.21.9
 - **Fabric API** 0.133.14+1.21.9
 - **PB4 Placeholder API** 2.8.0+1.21.9
 
