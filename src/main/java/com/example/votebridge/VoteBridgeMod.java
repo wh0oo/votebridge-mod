@@ -38,8 +38,9 @@ public class VoteBridgeMod implements ModInitializer {
                 // Use display name text -> string (works across mappings)
                 String playerName = player.getName().getString();
 
+                // Add leading slash for proper command execution
                 String tellraw = String.format(
-                    "tellraw @a [{\\\"text\\\":\\\"%s\\\",\\\"color\\\":\\\"blue\\\"},{\\\"text\\\":\\\" voted on \\\",\\\"color\\\":\\\"aqua\\\"},{\\\"text\\\":\\\"%s\\\",\\\"color\\\":\\\"blue\\\"},{\\\"text\\\":\\\" (\\\",\\\"color\\\":\\\"aqua\\\"},{\\\"text\\\":\\\"%s\\\",\\\"color\\\":\\\"yellow\\\"},{\\\"text\\\":\\\" total votes)\\\",\\\"color\\\":\\\"aqua\\\"}]",
+                    "/tellraw @a [{\\\"text\\\":\\\"%s\\\",\\\"color\\\":\\\"blue\\\"},{\\\"text\\\":\\\" voted on \\\",\\\"color\\\":\\\"aqua\\\"},{\\\"text\\\":\\\"%s\\\",\\\"color\\\":\\\"blue\\\"},{\\\"text\\\":\\\" (\\\",\\\"color\\\":\\\"aqua\\\"},{\\\"text\\\":\\\"%s\\\",\\\"color\\\":\\\"yellow\\\"},{\\\"text\\\":\\\" total votes)\\\",\\\"color\\\":\\\"aqua\\\"}]",
                     escape(playerName), escape(service), escape(count)
                 );
 
