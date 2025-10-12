@@ -4,7 +4,9 @@ A lightweight Fabric mod that bridges vote events from **NuVotifier / VoteListen
 
 ## Why It Exists
 
-VoteBridge was created to solve the problem by providing a mod-level command handler that:
+votelistener comes with a placeholder that I could not get to display on the discord channel. 
+
+VoteBridge was created to solve this problem by providing a mod-level command handler that:
 1. Resolves Placeholder API variables (via **PB4 Placeholder API**).
 2. Constructs a valid JSON `/tellraw` message.
 3. Executes it server-side (so it’s visible to players and Discord bridges alike).
@@ -29,7 +31,7 @@ The VoteBridge mod intercepts the `/voteannounce` command and:
 ## Dependencies
 
 - **Fabric Loader** 0.16.14+
-- **Minecraft** 1.21.9
+- **Minecraft** 1.21.9/10
 - **votelistener** 1.1.0+1.21.9
 - **Fabric API** 0.133.14+1.21.9
 - **PB4 Placeholder API** 2.8.0+1.21.9
