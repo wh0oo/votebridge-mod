@@ -24,7 +24,7 @@ The VoteBridge mod intercepts the `/voteannounce` command and:
 2. Resolves `%votelistener:vote_count%` using the PB4 Placeholder API.
 3. Formats a clean, colored `/tellraw` message:
    ```
-   player-name-here voted on MCTools.org (25 total votes)
+   Steve voted on MCTools.org (25 total votes)
    ```
 4. Executes it as a true `/tellraw`, ensuring proper color formatting and visibility through Discord chat relays.
 
@@ -49,12 +49,12 @@ The VoteBridge mod intercepts the `/voteannounce` command and:
 
 In Minecraft chat:
 ```
-player-here voted on MCTools.org (25 total votes)
+Steve voted on MCTools.org (25 total votes)
 ```
 
 In Discord (via Minecord bridge):
 ```
-player-here voted on MCTools.org (25 total votes)
+Steve voted on MCTools.org (25 total votes)
 ```
 ## License
 
