@@ -28,16 +28,13 @@ public class VoteBridgeMod implements ModInitializer {
     ) {
         dispatcher.register(
             CommandManager.literal("voteannounce")
-                // NO permission gate — this is an internal command invoked by VoteListener
                 .then(CommandManager.argument("player", EntityArgumentType.player())
                 .then(CommandManager.argument("service", StringArgumentType.greedyString())
                 .executes(ctx -> {
 
-                    ServerCommandSource src = ctx.getSource();
                     ServerPlayerEntity player = EntityArgumentType.getPlayer(ctx, "player");
                     String service = StringArgumentType.getString(ctx, "service");
 
-                    // Resolve votelistener placeholder in player context
                     Text parsed = Placeholders.parseText(
                         Text.literal("%votelistener:vote_count%"),
                         PlaceholderContext.of(player)
@@ -46,7 +43,6 @@ public class VoteBridgeMod implements ModInitializer {
                     String count = parsed.getString();
                     String playerName = player.getName().getString();
 
-                    // Build tellraw JSON
                     String tellraw = String.format(
                         "/tellraw @a [" +
                             "{\"text\":\"%s\",\"color\":\"blue\"}," +
@@ -61,9 +57,12 @@ public class VoteBridgeMod implements ModInitializer {
                         escape(count)
                     );
 
-                    MinecraftServer server = src.getServer();
+                    MinecraftServer server = ctx.getSource().getServer();
+                    ServerCommandSource console = server.getCommandSource();
+
                     server.getCommandManager()
-                        .executeWithPrefix(server.getCommandSource(), tellraw);
+                        .getDispatcher()
+                        .execute(tellraw.substring(1), console);
 
                     return 1;
                 })))
