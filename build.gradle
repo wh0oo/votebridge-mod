@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.11-SNAPSHOT'
+    id 'fabric-loom' version '1.14.6'
     id 'maven-publish'
 }
 
@@ -18,7 +18,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${loader_version}"
 
-    // Fabric API (for CommandRegistrationCallback)
+    // Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
     // PB4 Placeholder API
