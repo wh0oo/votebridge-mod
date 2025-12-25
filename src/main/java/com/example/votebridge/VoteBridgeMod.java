@@ -1,29 +1,77 @@
 package com.example.votebridge;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import eu.pb4.placeholders.api.Placeholders;
+import eu.pb4.placeholders.api.PlaceholderContext;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 public class VoteBridgeMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(
-                CommandManager.literal("votebridge")
-                    // FIXED FOR 1.21.11
-                    .requires(source -> source.hasPermission(2))
-                    .executes(context -> {
-                        ServerCommandSource source = context.getSource();
-                        source.sendFeedback(
-                            () -> Text.literal("VoteBridge command executed."),
-                            false
-                        );
-                        return 1;
-                    })
-            );
-        });
+        CommandRegistrationCallback.EVENT.register(this::register);
+    }
+
+    private void register(
+            CommandDispatcher<ServerCommandSource> dispatcher,
+            CommandRegistryAccess access,
+            CommandManager.RegistrationEnvironment env
+    ) {
+        dispatcher.register(
+            CommandManager.literal("voteannounce")
+                // NO permission gate — this is an internal command invoked by VoteListener
+                .then(CommandManager.argument("player", EntityArgumentType.player())
+                .then(CommandManager.argument("service", StringArgumentType.greedyString())
+                .executes(ctx -> {
+
+                    ServerCommandSource src = ctx.getSource();
+                    ServerPlayerEntity player = EntityArgumentType.getPlayer(ctx, "player");
+                    String service = StringArgumentType.getString(ctx, "service");
+
+                    // Resolve votelistener placeholder in player context
+                    Text parsed = Placeholders.parseText(
+                        Text.literal("%votelistener:vote_count%"),
+                        PlaceholderContext.of(player)
+                    );
+
+                    String count = parsed.getString();
+                    String playerName = player.getName().getString();
+
+                    // Build tellraw JSON
+                    String tellraw = String.format(
+                        "/tellraw @a [" +
+                            "{\"text\":\"%s\",\"color\":\"blue\"}," +
+                            "{\"text\":\" voted on \",\"color\":\"aqua\"}," +
+                            "{\"text\":\"%s\",\"color\":\"blue\"}," +
+                            "{\"text\":\" (\",\"color\":\"aqua\"}," +
+                            "{\"text\":\"%s\",\"color\":\"yellow\"}," +
+                            "{\"text\":\" total votes)\",\"color\":\"aqua\"}" +
+                        "]",
+                        escape(playerName),
+                        escape(service),
+                        escape(count)
+                    );
+
+                    MinecraftServer server = src.getServer();
+                    server.getCommandManager()
+                        .executeWithPrefix(server.getCommandSource(), tellraw);
+
+                    return 1;
+                })))
+        );
+    }
+
+    private static String escape(String s) {
+        if (s == null) return "";
+        return s.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 }
