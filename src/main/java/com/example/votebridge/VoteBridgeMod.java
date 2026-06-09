@@ -3,16 +3,15 @@ package com.example.votebridge;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import eu.pb4.placeholders.api.Placeholders;
-import eu.pb4.placeholders.api.PlaceholderContext;
+import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
 
 public class VoteBridgeMod implements ModInitializer {
 
@@ -22,25 +21,26 @@ public class VoteBridgeMod implements ModInitializer {
     }
 
     private void register(
-            CommandDispatcher<ServerCommandSource> dispatcher,
-            CommandRegistryAccess access,
-            CommandManager.RegistrationEnvironment env
+            CommandDispatcher<CommandSourceStack> dispatcher,
+            CommandBuildContext access,
+            Commands.CommandSelection env
     ) {
         dispatcher.register(
-            CommandManager.literal("voteannounce")
-                .then(CommandManager.argument("player", EntityArgumentType.player())
-                .then(CommandManager.argument("service", StringArgumentType.greedyString())
+            Commands.literal("voteannounce")
+                .then(Commands.argument("player", EntityArgument.player())
+                .then(Commands.argument("service", StringArgumentType.greedyString())
                 .executes(ctx -> {
 
-                    ServerPlayerEntity player = EntityArgumentType.getPlayer(ctx, "player");
+                    ServerPlayer player = EntityArgument.getPlayer(ctx, "player");
                     String service = StringArgumentType.getString(ctx, "service");
 
-                    Text parsed = Placeholders.parseText(
-                        Text.literal("%votelistener:vote_count%"),
-                        PlaceholderContext.of(player)
-                    );
+                    String count = Placeholders.SERVER_PLACEHOLDER_PARSER
+                        .parseComponent(
+                            "%votelistener:vote_count%",
+                            ServerPlaceholderContext.of(player).asParserContext()
+                        )
+                        .getString();
 
-                    String count = parsed.getString();
                     String playerName = player.getName().getString();
 
                     String tellraw = String.format(
@@ -58,11 +58,9 @@ public class VoteBridgeMod implements ModInitializer {
                     );
 
                     MinecraftServer server = ctx.getSource().getServer();
-                    ServerCommandSource console = server.getCommandSource();
+                    CommandSourceStack console = server.createCommandSourceStack();
 
-                    server.getCommandManager()
-                        .getDispatcher()
-                        .execute(tellraw.substring(1), console);
+                    server.getCommands().performPrefixedCommand(console, tellraw);
 
                     return 1;
                 })))

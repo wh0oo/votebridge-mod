@@ -3,9 +3,11 @@
   "id": "votebridge",
   "version": "${version}",
   "name": "VoteBridge",
-  "description": "Bridges VoteListener placeholders to a single tellraw message visible in-game and on Discord.",
+  "description": "Bridges VoteListener placeholders to Minecraft vote announcements.",
   "authors": ["wh0oo"],
-  "contact": {},
+  "contact": {
+    "homepage": "https://github.com/wh0oo/votebridge"
+  },
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
@@ -14,9 +16,9 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.16.0",
-    "minecraft": ">=1.21.11",
-    "java": ">=21",
+    "fabricloader": ">=0.18.4",
+    "minecraft": ">=26.1.2",
+    "java": ">=25",
     "fabric-api": "*",
     "placeholder-api": "*"
   }

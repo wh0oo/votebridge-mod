@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.14.6'
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
     id 'maven-publish'
 }
 
@@ -11,32 +11,50 @@ base {
 }
 
 repositories {
-    maven { url = 'https://maven.fabricmc.net/' }
-    maven { url = 'https://maven.nucleoid.xyz' } // PB4 Placeholder API
     mavenCentral()
+
+    maven {
+        url = 'https://maven.fabricmc.net/'
+    }
+
+    maven {
+        url = 'https://maven.nucleoid.xyz'
+    }
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
-    modImplementation "eu.pb4:placeholder-api:${pb4_placeholder_api_version}"
+    // Minecraft / Fabric
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    // PB4 Placeholder API
+    implementation "eu.pb4:placeholder-api:${project.pb4_placeholder_api_version}"
 }
 
-loom {
-    splitEnvironmentSourceSets()
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 21
+    it.options.release = 25
 }
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
     withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archives_base_name}" }
+    }
 }
 
 publishing {
@@ -45,8 +63,5 @@ publishing {
             artifactId = project.archives_base_name
             from components.java
         }
-    }
-    repositories {
-        mavenLocal()
     }
 }
