@@ -24,20 +24,18 @@ VoteBridge was created to solve this problem by providing a mod-level command ha
 
 When a player votes through a registered site (e.g. TopMinecraftServers, Minecraft-MP, MCTools, etc.), VoteListener triggers the internal `voteannounce` command with the voting player and service name as arguments.
 
-![VoteBridge screenshot](images/discord.png)
-
 The VoteBridge mod handles the `/voteannounce` command and:
 
 1. Fetches the player context for placeholder expansion.
 2. Resolves `%votelistener:vote_count%` using the PB4 Placeholder API.
 3. Formats a clean, colored `/tellraw` message:
 
-```text
-Steve voted on TopMinecraftServers (69 total votes)
-```
+![VoteBridge in use inside the game](images/ingame.png)
 
 4. Executes the `/tellraw` command as the server console so all players receive the formatted message.
 5. Sends a Discord webhook notification using ANSI-colored formatting.
+
+![VoteBridge in use on Discord](images/discord.png)
 
 ## VoteListener Configuration
 
