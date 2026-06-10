@@ -24,7 +24,7 @@ VoteBridge was created to solve this problem by providing a mod-level command ha
 
 When a player votes through a registered site (e.g. TopMinecraftServers, Minecraft-MP, MCTools, etc.), VoteListener triggers the internal `voteannounce` command with the voting player and service name as arguments.
 
-![VoteBridge screenshot](images/example.png)
+![VoteBridge screenshot](images/discord.png)
 
 The VoteBridge mod handles the `/voteannounce` command and:
 
